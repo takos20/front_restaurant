@@ -74,7 +74,7 @@
         <v-row wrap>
           <v-col cols="12" sm="4" class="mb-0 py-0">
                   <v-autocomplete
-                    v-model="form.region"
+                    v-model="filter.region"
                     :items="itemsregion"
                     :loading="isLoading"
                     :search-input.sync="search"

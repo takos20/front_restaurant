@@ -72,7 +72,7 @@
       </v-card-title>
       <v-card-text>
         <v-row wrap>
-          <v-col cols="12" sm="6" class="mb-0 py-0">
+          <v-col cols="12" sm="3" class="mb-0 py-0">
                   <v-autocomplete
                     v-model="filter.city"
                     :items="itemsCity"
@@ -94,7 +94,7 @@
                     </template>
                   </v-autocomplete>
                 </v-col>
-          <v-col class="mb-0 py-0" cols="12" sm="4">
+          <v-col class="mb-0 py-0" cols="12" sm="3">
             <v-text-field
               :label="$vuetify.lang.t('$vuetify.city.cols.name.title')"
               prepend-inner-icon="mdi-rename-box"
@@ -104,7 +104,7 @@
               dense
             ></v-text-field>
           </v-col>
-          <v-col class="mb-0 py-0" cols="12" sm="4">
+          <v-col class="mb-0 py-0" cols="12" sm="3">
             <v-text-field
               :label="$vuetify.lang.t('$vuetify.category.cols.code.title')"
               prepend-inner-icon="mdi-code-array"
@@ -116,7 +116,7 @@
           </v-col>
           <v-col
                   cols="12"
-                  sm="4"
+                  sm="3"
                   class="mb-0 py-0"
                   style="margin-top: -20px"
                 >
@@ -171,6 +171,13 @@
               $vuetify.lang.t(header.text)
             }}
           </tr>
+        </template> 
+        <template v-slot:header.is_default="{ header }">
+          <tr>
+            {{
+              $vuetify.lang.t(header.text)
+            }}
+          </tr>
         </template>
 
         <template v-slot:header.create_date="{ header }">
@@ -198,6 +205,35 @@
 
                 <td class="subtitle-2">
                   {{ item.city.name }}
+                </td>
+                <td>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <template v-if="item.is_default">
+                        <v-icon
+                          color="primary"
+                          class="pointer"
+                          dark
+                          @click="enabled(item)"
+                          v-on="on"
+                        >
+                          mdi-check-circle
+                        </v-icon>
+                      </template>
+                      <template v-else>
+                        <v-icon
+                          color="red accent-4"
+                          v-on="on"
+                          @click="enabled(item)"
+                          class="pointer"
+                          dark
+                        >
+                          mdi-close-circle
+                        </v-icon>
+                      </template>
+                    </template>
+                    
+                  </v-tooltip>
                 </td>
                 <td class="subtitle-2">
                   {{ $moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
@@ -437,6 +473,14 @@ export default {
         {
           text: "$vuetify.city.title",
           value: "city",
+          align: "start",
+          sortable: true,
+          width: "50",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.district.cols.is_default.title",
+          value: "is_default",
           align: "start",
           sortable: true,
           width: "50",

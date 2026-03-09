@@ -233,7 +233,6 @@
                           dark
                           @click="enabled(item)"
                           v-on="on"
-                          :disabled="!get_permissions"
                         >
                           mdi-check-circle
                         </v-icon>
@@ -245,7 +244,6 @@
                           @click="enabled(item)"
                           class="pointer"
                           dark
-                          :disabled="!get_permissions"
                         >
                           mdi-close-circle
                         </v-icon>
