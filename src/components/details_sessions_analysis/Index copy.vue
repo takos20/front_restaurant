@@ -1,0 +1,752 @@
+<template>
+  <div>
+    <v-card class="pb-4">
+      <div
+        class="title mb-5 black--text lighten-5 text-center"
+        style="height: 30px; margin-top: 30px; background-color: #e9eef4"
+      >
+        {{ $vuetify.lang.t("$vuetify.cash.title") }}:{{
+          this.$route.params.code
+        }}
+        / {{ $vuetify.lang.t("$vuetify.cash.cols.cashier_name.title") }}:{{
+          this.$route.params.name
+        }}
+      </div>
+      <div class="mt-5 mx-5">
+        <!--        <template-->
+        <!--          v-if="$auth.check(['ADMIN', 'CASHIER']) && this.items.length !== 0"-->
+        <!--        >-->
+        <!--          <v-btn class="mr-2 my-2" @click="create()" color="primary" dark>-->
+        <!--            <v-icon left>mdi-account-plus-outline</v-icon>-->
+        <!--            {{ $vuetify.lang.t("$vuetify.btn.add") }}-->
+        <!--          </v-btn>-->
+        <!--        </template>-->
+        <v-btn
+          :loading="loading.refresh"
+          @click="refreshItems()"
+          class="mr-2 my-2"
+          depressed
+          color="#f1f5fc"
+        >
+          <v-icon left color="primary">mdi-refresh</v-icon>
+          {{ $vuetify.lang.t("$vuetify.btn.refresh") }}
+        </v-btn>
+        <v-btn
+          color="#f1f5fc"
+          @click="showFilter()"
+          class="mr-2 my-2"
+          depressed
+        >
+          <v-icon color="primary" left>mdi-filter-outline</v-icon>
+          {{ $vuetify.lang.t("$vuetify.cash_movement.btn.filter.title") }}
+        </v-btn>
+
+        <v-spacer></v-spacer>
+      </div>
+    </v-card>
+    <v-card class="pb-4" height="50">
+      <v-spacer></v-spacer>
+      <div class="mt-5 mx-5">
+        <template>
+          <v-chip
+            class="subtitle-1 font-weight-bold my-2"
+            text-color="black"
+            color="#f1f5fc"
+            medium
+            label
+          >
+            {{ $vuetify.lang.t("$vuetify.cash.cols.cash_fund.title") }} :
+            {{ Intl.NumberFormat().format(get_cash_fund) }} FCFA
+            <!--{{ sum_zero| numberformat(locale, 0, "currency", "XAF")  }}-->
+          </v-chip>
+          <v-chip
+            class="subtitle-1 font-weight-bold"
+            text-color="black"
+            color="#f1f5fc"
+            medium
+            label
+            style="margin-left: 10px"
+          >
+            {{
+              $vuetify.lang.t("$vuetify.cash_movement.cols.account_end.title")
+            }}
+            : {{ Intl.NumberFormat().format(get_solde) }} FCFA
+            <!--{{ sum_zero| numberformat(locale, 0, "currency", "XAF")  }}-->
+          </v-chip>
+          <v-chip
+            class="subtitle-1 font-weight-bold"
+            text-color="teal darken-1"
+            color="#f1f5fc"
+            medium
+            label
+            style="margin-left: 10px"
+          >
+            {{ $vuetify.lang.t("$vuetify.cash_movement.cols.type.ENTRIES") }} :
+            {{ Intl.NumberFormat().format(get_sum_entry) }} FCFA
+            <!--{{ sum_zero| numberformat(locale, 0, "currency", "XAF")  }}--> </v-chip
+          ><v-chip
+            class="title font-weight-bold"
+            text-color="red accent-4"
+            color="#f1f5fc"
+            medium
+            label
+            style="margin-left: 10px"
+          >
+            {{ $vuetify.lang.t("$vuetify.cash_movement.cols.type.EXITS") }} :
+            {{ Intl.NumberFormat().format(get_sum_exit) }} FCFA
+            <!--{{ sum_zero| numberformat(locale, 0, "currency", "XAF")  }}-->
+          </v-chip>
+        </template>
+        <v-spacer></v-spacer>
+      </div>
+    </v-card>
+    <v-card>
+      <v-data-table
+        :footer-props="{
+          'items-per-page-options': itemPerPageOptions,
+        }"
+        :headers="headers"
+        :items="items"
+        :items-per-page="itemPerPage"
+        :loading="loading.list"
+        :options.sync="pagination"
+        :server-items-length="meta.totalElements"
+        :sort-by="sortBy"
+        :sort-desc="sortDesc"
+        item-key="name"
+        class="mt-5"
+      >
+        <template v-slot:header.code="{ header }">
+          <tr>
+            {{
+              $vuetify.lang.t(header.text)
+            }}
+          </tr>
+        </template>
+        <template v-slot:header.type="{ header }">
+          <tr>
+            {{
+              $vuetify.lang.t(header.text)
+            }}
+          </tr> </template
+        ><template v-slot:header.name="{ header }">
+          <tr>
+            {{
+              $vuetify.lang.t(header.text)
+            }}
+          </tr>
+        </template>
+        <template v-slot:header.motive="{ header }">
+          <tr>
+            {{
+              $vuetify.lang.t(header.text)
+            }}
+          </tr>
+        </template>
+        <template v-slot:header.expenses_nature="{ header }">
+          <tr>
+            {{
+              $vuetify.lang.t(header.text)
+            }}
+          </tr> </template
+        ><template v-slot:header.amount_movement="{ header }">
+          <tr>
+            {{
+              $vuetify.lang.t(header.text)
+            }}
+          </tr>
+        </template>
+        <template v-slot:header.create_date="{ header }">
+          <tr>
+            {{
+              $vuetify.lang.t(header.text)
+            }}
+          </tr>
+        </template>
+        <template v-slot:body="{ items }">
+          <v-hover>
+            <tbody>
+              <tr :key="item.id" v-for="item in items">
+                <td class="subtitle-2">{{ item.code }}</td>
+                <td class="subtitle-2">
+                  <v-tooltip top>
+                    <template
+                      v-slot:activator="{ on }"
+                      v-if="item.type === 'ENTRY'"
+                    >
+                      <v-icon
+                        color="teal darken-1"
+                        class="pointer"
+                        dark
+                        v-on="on"
+                        style="font-size: 15px"
+                      >
+                        {{
+                          $vuetify.lang.t(
+                            "$vuetify.cash_movement.cols.type." +
+                              item.expenses_nature.type
+                          )
+                        }}
+                      </v-icon>
+                    </template>
+                    <template v-slot:activator="{ on }" v-else>
+                      <v-icon
+                        color="red accent-4"
+                        class="pointer"
+                        dark
+                        v-on="on"
+                        style="font-size: 15px"
+                      >
+                        {{
+                          $vuetify.lang.t(
+                            "$vuetify.cash_movement.cols.type." +
+                              item.expenses_nature.type
+                          )
+                        }}
+                      </v-icon>
+                    </template>
+                  </v-tooltip>
+                </td>
+                <td class="subtitle-2">
+                  {{ item.cash.user.username }}
+                </td>
+                <td class="subtitle-2">
+                  {{ item.motive }}
+                </td>
+                <td class="subtitle-2">
+                  {{ item.expenses_nature.name }}
+                </td>
+                <td class="subtitle-2">
+                  <template v-if="item.type === 'ENTRY'">
+                    <v-chip
+                      class="ma-2"
+                      color="teal darken-1"
+                      text-color="white"
+                      small
+                    >
+                      {{ item.amount_movement }} FCFA
+                    </v-chip>
+                  </template>
+                  <template v-else>
+                    <v-chip
+                      class="ma-2"
+                      color="red accent-4"
+                      text-color="white"
+                      small
+                    >
+                      {{ item.amount_movement }} FCFA
+                    </v-chip>
+                  </template>
+                </td>
+                <!--<td class="subtitle-2">-->
+                <!--<v-tooltip top>-->
+                <!--<template-->
+                <!--v-slot:activator="{ on }"-->
+                <!--v-if="item.type === 'ENTRY'"-->
+                <!--&gt;-->
+                <!--<v-icon-->
+                <!--color="teal darken-1"-->
+                <!--class="pointer"-->
+                <!--dark-->
+                <!--v-on="on"-->
+                <!--style="font-size: 15px"-->
+                <!--&gt;-->
+                <!--{{ item.amount_movement }} FCFA-->
+                <!--</v-icon>-->
+                <!--</template>-->
+                <!--<template v-slot:activator="{ on }" v-else>-->
+                <!--<v-icon-->
+                <!--color="red accent-4"-->
+                <!--class="pointer"-->
+                <!--dark-->
+                <!--v-on="on"-->
+                <!--style="font-size: 15px"-->
+                <!--&gt;-->
+                <!--{{ item.amount_movement }} FCFA-->
+                <!--</v-icon>-->
+                <!--</template>-->
+                <!--</v-tooltip>-->
+                <!--</td>-->
+                <td class="subtitle-2">
+                  {{ $moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
+                </td>
+              </tr>
+            </tbody>
+          </v-hover>
+        </template>
+      </v-data-table>
+      <form-user
+        :dialog="dialogForm"
+        :form="form"
+        :messages="messages"
+        @getItems="getItems"
+        ref="userForm"
+      ></form-user
+      ><form-cash :dialog="dialogFormCash"></form-cash>
+      <cash-close
+        :dialog="dialogForm"
+        ref="closeCash"
+        :messages="messages"
+        @getItems="getItems"
+      ></cash-close>
+      <delete-item
+        :dialog="dialogDelete"
+        :messages="messagesDelete"
+        :urlItems="urlDeleteItems"
+        @getItems="getItems"
+      ></delete-item>
+    </v-card>
+    <div>
+      <div
+        class="title mb-5 black--text lighten-5 text-center"
+        style="height: 30px; margin-top: 30px; background-color: #e9eef4"
+      >
+        {{ $vuetify.lang.t("$vuetify.patients_settlements.list.title") }}
+      </div>
+      <v-card>
+        <v-data-table
+          :footer-props="{
+            'items-per-page-options': itemPerPageOptions,
+          }"
+          :headers="headersSettlement"
+          :items="itemsSettlement"
+          :items-per-page="itemPerPage"
+          :loading="loading.list"
+          :options.sync="pagination"
+          :server-items-length="meta.totalElements"
+          :sort-by="sortBy"
+          :sort-desc="sortDesc"
+          item-key="name"
+          class="mt-5"
+        >
+          <template v-slot:header.code="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.date="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr> </template
+          ><template v-slot:header.code_patient="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.patient_name="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr> </template
+          ><template v-slot:header.payment="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:body="{ items }">
+            <v-hover>
+              <tbody>
+                <tr :key="item.id" v-for="item in items">
+                  <td class="subtitle-2">{{ item.code }}</td>
+
+                  <td class="subtitle-2">
+                    {{ item.patient.code }}
+                  </td>
+                  <td class="subtitle-2">
+                    {{ item.patient.name }}
+                  </td>
+                  <td class="subtitle-2">
+                    <v-chip
+                      class="ma-2"
+                      color="teal darken-1"
+                      text-color="white"
+                      small
+                    >
+                      {{ item.payment }} FCFA
+                    </v-chip>
+                  </td>
+                  <td class="subtitle-2">
+                    {{ $moment(item.date).format("YYYY-MM-DD HH:mm:ss") }}
+                  </td>
+                </tr>
+              </tbody>
+            </v-hover>
+          </template>
+        </v-data-table>
+      </v-card>
+    </div>
+  </div>
+</template>
+
+<script>
+import CashClose from "./../cash/EnableCash";
+import ListMixin from "./../../mixins/Common/List.vue";
+import FormUser from "./Form";
+import FormCash from "./FormCash";
+import DeleteItem from "./../Common/Delete";
+
+export default {
+  mixins: [ListMixin],
+  data: () => ({
+    urlItems: "/cashs/details_sessions_analysis",
+    sortBy: ["id"],
+    cash_fund: "",
+    itemsSettlement: [],
+    headersSettlement: [],
+    dialogForm: {
+      show: false,
+      shows: {
+        showFilter: false,
+        showInfo: false,
+      },
+    },
+    dialogFormCash: {
+      show: false,
+      shows: {
+        showFilter: false,
+        showInfo: false,
+      },
+    },
+    dialogDelete: {
+      show: false,
+    },
+    dialogDetail: {
+      show: false,
+    },
+    dialogEnt: {
+      show: false,
+    },
+    loading: {
+      list: false,
+      refresh: false,
+      filter: false,
+    },
+    form: {
+      id: null,
+      type: null,
+      email: null,
+      code: null,
+      password: null,
+      role: null,
+      is_active: null,
+    },
+
+    filter: {
+      code: null,
+      role: null,
+    },
+    messages: {
+      title: "",
+      submit: "",
+      success: "",
+    },
+    messagesDelete: {
+      success: "$vuetify.cash_movement.delete.success",
+    },
+  }),
+  computed: {
+    get_cash_fund() {
+      let item = this.items;
+      console.log(item[1]);
+      if (this.cash_fund !== "") {
+        return this.cash_fund;
+      } else {
+        return 0;
+      }
+    },
+    get_solde() {
+      let solde = this.get_cash_fund + this.get_sum_entry - this.get_sum_exit;
+      return solde;
+    },
+    get_sum_entry_settlement() {
+      let sum = this._.sumBy(this.itemsSettlement, (t) => {
+        return t.payment;
+      });
+      return sum;
+    },
+    get_sum_entry() {
+      let sum_entry = this._.filter(this.items, (t) => {
+        return t.type === "ENTRY";
+      });
+      let sum = this._.sumBy(sum_entry, (t) => {
+        return t.amount_movement;
+      });
+      let total_sum = this.get_sum_entry_settlement + sum;
+      return total_sum;
+    },
+    get_sum_exit() {
+      let sum_exit = this._.filter(this.items, (t) => {
+        return t.type === "EXIT";
+      });
+      // console.log(sum_entry);
+      let sum = this._.sumBy(sum_exit, (t) => {
+        return t.amount_movement;
+      });
+      return sum;
+    },
+  },
+  created() {
+    this.setHeaders;
+    this.setHeadersSettlement();
+    //this.setItemRoles();
+  },
+  methods: {
+    getItems() {
+      let self = this;
+      const { page, itemsPerPage } = this.pagination;
+      let params = {
+        page: page,
+        size: itemsPerPage,
+      };
+      if (!this._.isEmpty(this._search)) {
+        this._search = this._.merge(params, this._search);
+      }
+      return new Promise((resolve, reject) => {
+        this.loading.list = true;
+        self.$store
+          .dispatch("request", {
+            url: self.urlItems + "?id=" + this.$route.params.id,
+            params: params,
+          })
+          .then((response) => {
+            let data = response.data;
+            self.items = data.content.cash_movement;
+            self.cash_fund = data.content.cash_fund;
+            self.itemsSettlement = data.content.settlement;
+            self.meta = { totalElements: data.totalElements };
+            // console.log("meta", data.content[0]);
+            resolve(response);
+          })
+          .catch((err) => {
+            let message = this.$vuetify.lang.t("$vuetify.error_occured");
+            if (err.response) {
+              if (err.response.status === 400) {
+                const fields = err.response.data;
+                self.setFormErrors(fields);
+
+                const firstField = Object.keys(fields)[0];
+
+                if (firstField && Array.isArray(fields[firstField])) {
+                  message = fields[firstField][0];
+                }
+              } else if (err.response.status === 403) {
+                message = self.$vuetify.lang.t("$vuetify.error_denied");
+              } else if (err.response.status === 500) {
+                message = self.$vuetify.lang.t("$vuetify.error_server");
+              }
+            }
+            self.$store.dispatch("showNotification", {
+              status: true,
+              text: message,
+            });
+            reject(err);
+          })
+          .then(() => {
+            self.loading.list = false;
+            resolve();
+          });
+      });
+    },
+    setHeadersSettlement() {
+      this.headersSettlement = [
+        {
+          text: "$vuetify.patients_settlements.cols.code.title",
+          value: "code",
+          align: "start",
+          sortable: true,
+          width: "15",
+          class: "grey--text text--darken-3",
+        },
+
+        {
+          text: "$vuetify.patients_settlements.cols.code_patient.title",
+          value: "code_patient",
+          align: "start",
+          sortable: true,
+          width: "50",
+          class: "grey--text text--darken-3",
+        },
+
+        {
+          text: "$vuetify.patients_settlements.cols.patient_name.title",
+          value: "patient_name",
+          align: "start",
+          sortable: true,
+          width: "140",
+          class: "grey--text text--darken-3",
+        },
+
+        {
+          text: "$vuetify.patients_settlements.cols.payment.title",
+          value: "payment",
+          align: "start",
+          sortable: true,
+          width: "20",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.patients_settlements.cols.date.title",
+          value: "date",
+          align: "start",
+          sortable: true,
+          width: "50",
+          class: "grey--text text--darken-3",
+        },
+        // {
+        //   text: "$vuetify.patients_settlements.cols.status.title",
+        //   value: "is_active",
+        //   align: "start",
+        //   sortable: true,
+        //   width: "1",
+        //   class: "grey--text text--darken-3"
+        // },
+      ];
+    },
+    setHeaders() {
+      this.headers = [
+        {
+          text: "$vuetify.cash_movement.cols.code.title",
+          value: "code",
+          align: "start",
+          sortable: true,
+          width: "15",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.cash_movement.cols.type.title",
+          value: "type",
+          align: "start",
+          sortable: true,
+          width: "50",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.cash_movement.cols.name.title",
+          value: "name",
+          align: "start",
+          sortable: true,
+          width: "50",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.cash_movement.cols.motive.title",
+          value: "motive",
+          align: "start",
+          sortable: true,
+          width: "20",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.cash_movement.cols.expenses_nature.title",
+          value: "expenses_nature",
+          align: "start",
+          sortable: true,
+          width: "30",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.cash_movement.cols.amount_movement.title",
+          value: "amount_movement",
+          align: "start",
+          sortable: true,
+          width: "30",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.cash_movement.cols.created.title",
+          value: "create_date",
+          align: "start",
+          sortable: true,
+          width: "105",
+          class: "grey--text text--darken-3",
+        },
+      ];
+    },
+    close() {
+      // console.log(this.items[0].cash);
+      this.dialogForm.shows.showInfo = true;
+      this.messages = {
+        title: "$vuetify.cash.cols.status.enabled",
+        submit: "$vuetify.cash.update.submit",
+        success: "$vuetify.cash.update.success",
+      };
+      this.$refs.closeCash.setForm(this.items[0].cash);
+    },
+
+    create() {
+      this.dialogForm.show = true;
+      this.messages = {
+        title: "$vuetify.cash_movement.new.title",
+        submit: "$vuetify.cash_movement.new.submit",
+        success: "$vuetify.cash_movement.new.success",
+      };
+      this.form = {
+        id: null,
+        type: null,
+        name: null,
+        motive: null,
+        expenses_nature: null,
+        code: null,
+        is_active: false,
+      };
+    },
+    createCash() {
+      this.dialogFormCash.show = true;
+    },
+    editUser(item) {
+      this.dialogForm.show = true;
+      this.messages = {
+        title: "$vuetify.cash_movement.update.title",
+        submit: "$vuetify.cash_movement.update.submit",
+        success: "$vuetify.cash_movement.update.success",
+      };
+      this.$refs.userForm.setForm(item);
+    },
+    showFilter() {
+      this.dialogForm.shows.showFilter = true;
+    },
+    performFilter() {
+      let self = this;
+      self.loading.list = true;
+      let params = {};
+      if (self.filter.code !== null) {
+        params["code"] = self.filter.code;
+      }
+      if (self.filter.role !== null) {
+        params["role"] = self.filter.role;
+      }
+      self._search = params;
+      //console.log("FILTRE", this._search);
+      self
+        .getItems()
+        .then(() => {
+          self.$refs.filterForm.closeDialog();
+        })
+        .finally(() => {
+          self.$refs.filterForm.stopLoadingBtn();
+        });
+    },
+    assignEnterprise(item) {
+      this.dialogEnt.show = true;
+      this.$refs.assignForm.setForm(item);
+    },
+  },
+  components: {
+    FormUser,
+    DeleteItem,
+    CashClose,
+    FormCash,
+  },
+};
+</script>
+
+<style scoped></style>

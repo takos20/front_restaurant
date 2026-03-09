@@ -1,0 +1,60 @@
+[0126/172036.929:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0126/172036.948:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0126/172044.307:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0126/172045.419:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0127/084027.292:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0127/084029.587:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0127/084230.714:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0127/084230.971:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0207/230737.923:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0207/230739.544:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0207/231346.987:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0207/232426.323:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0207/232433.997:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0207/232435.068:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/011916.236:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/011924.732:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/011931.646:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/011933.056:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/011948.705:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/011955.362:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/011958.076:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/012002.035:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/012002.296:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/012006.608:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/012015.880:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/012016.944:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected
+[0208/012017.070:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/012019.391:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/012019.924:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0208/012023.063:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060342.315:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060345.493:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060346.405:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060346.815:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected
+[0210/060357.896:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060358.363:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected
+[0210/060358.766:ERROR:base\i18n\icu_util.cc:230] Couldn't mmap icu data file
+[0210/060359.509:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060359.774:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:869] not connected
+[0210/060400.035:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060400.455:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060405.136:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060410.057:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060414.660:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060419.630:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060422.086:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0210/060740.033:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0211/103024.560:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0211/103032.251:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0211/103041.711:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0211/103050.616:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0211/103103.598:ERROR:third_party\crashpad\crashpad\client\crashpad_client_win.cc:188] crash server did not respond, self-terminating
+[0304/084303.377:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0304/084303.943:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0304/084443.367:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: Le fichier sp√©cifi√© est introuvable. (0x2)
+[0304/084446.498:ERROR:third_party\crashpad\crashpad\util\win\registrationã      
+Ì=s€∏éÖÎÎ4Ò\l∑ªÌΩ=ßÌΩ¥Mo3∑i3Ìﬁ‹{Sg<äD«zïD=JJ‚óÕ?Ä§$~Ivõ§i:ıÏll A AR/úURÉÈ«À¡"NËQP.”¡Og≥˜¥(ÉäYYÃfŒ≤r6+x8õÖ,ÕYFE{DÀ NäyAã"fY1≤ Y1tdΩ z1@~†eBS¯2>´Ë`gêxpJÂ∏ºJËA£flñ HAœ(èÀ’`˙∏ÅòˇÕËEN√íFD¡`≥îƒ-â3 {ÚüOv!K™4Lˇ≤î#˙«*Gá4=°|ˇ"ÁíÂñ¡C’–áöEø∑Ù‡◊+EÚÒØW;∑¬¯ØO~æQ∆=ìÒch‡úÒW¨  ¡Ù—Œ‡<‡Yúù™@Xƒ¡IB˜M0’˙4¥¨‚!r¯fì'0ß≥åêgQ|&æ¿◊≥Qpòx≈ÛŸ ?=ôTßÑl˙“rÙî§…Ë©  È¶ılƒŸπ—$c	9ArèûHë¬∑'¡vÁv3i∏)™ì2›=&∞Ä—9çOóÂËÑ%—l‡¢ïÙ¢ƒ—‹í	â˛âf£«>ËﬂèO°$•Q\•n{ú–ƒnv¶G»Â•€F»∞¬2^¨∆IêùéÀÌŸ†i	Éb9OŸô‘K‚∏˝Ôø˝„˝¡˛áŸ`Ëº∫r€¶>^»AV&„∑*Ú∆”†‹éÚÀ)-ÁEïŒaXæR*è1Ú‰Õ´7{.¡g?çF@±˛E9˚ìdÇ≤"ò∞0HËy¥CfÉ∞‚úf·j6¿_€{A∆G#W'&R)lµöΩ˙°lÍÛÂ ÊÅ!DS¡ì8≠™§ËeÊy∞Í(§Û
+4‘«=!∑•öÂ2.∆Ë¨„¢å√b¸jÔ√o?‘Ú{SÀç]z{^–Vµwá?Ì{S¥k˙øCñ≤ªıáÔﬂ}{j˘C1ÂÁŒÛeê}∫[≈|π˜ˆÊØˆﬁøæ;Ì¨“xÒCµœ◊Q«#NÛ ˆJ‰Îi‰—˚˝£ΩÉ;‘«ıõ8∂ôßËgÌ¥≠5ßÕ˜BåÌáya•˜?)≥ÄV€S>˙ô§´ÿL/¸_√$?Ài∂çÁÿ·åõË≈A∞^Ä≥Qº öÇ™\é√%?m‹⁄{}xvkgÎ˝˛á£wo?º¸}ãÏê-<IÏøﬂ:íáâPû∏ÿÀ¯åíÁœüo-Ç§†[Ω,ıIYhÎö√æ4 TŸ™PÒ-»5ÀR,k'bªG◊îHÉy6—≤Bô2ìD}Y°;+$x–ïyö∞ ä≥S@Qﬂ∆ú.8µèåç≤®ﬁ`∂ÿö@‘ª#*Rq42p∫›ßù∫äCñëÑ. )Áqp∞Ôièk(&5–˚◊Ñ“N{hx∂z›¨EÎÃØYÚ’Ñ≤B°†dŒó1˙‹flg€à9‰à∑Ÿ`ï‹±%N\QË›Ó·£ë°êXûTÖW\ÎñK∆
+-Ô§å¡ñüWÇ≠™”ŒFEÑîø@$ı’Ï¶	Kù¸Ÿ(eM@ã8))´Mmû“r…¨Ì¨WZ”ïZ8ƒ2fŸQΩ9Ær:W?,±Å?◊‰¢$µÂ€sMæ§¥∂¨ıgç‚,£\,j¨TÜ∏cè–l@ø*æ<˛5øõ°àcñYÛ‡§Ö.*OÔYêT∫≈_€/,a ÿôÀ=¯çXàU%fÎ#”d’l],∏X\ØÔãe0*1ßﬁ"Nå¡Ä£ú≥'mÑJ[bEG9ˆßt$∂ÿöäyQ~≠Ôd„Nãx•≥?]“ ¢i´o≠9pµˆàø}0?
+XÒa ∫n9Å… Qì´,D˘ßq`ìUP~Ü™$NhvZ.Q•håKV…æ≤^âqPï

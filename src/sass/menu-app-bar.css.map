@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,aAAa,CAAC;EACV,OAAO,EAAE,cAAc;CACxB",
+    "sources": [
+        "menu-app-bar.scss"
+    ],
+    "names": [],
+    "file": "menu-app-bar.css"
+}

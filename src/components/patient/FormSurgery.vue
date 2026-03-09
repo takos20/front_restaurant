@@ -1,0 +1,1435 @@
+<template>
+  <v-dialog v-model="dialog.show" persistent max-width="1000px">
+    <v-card class="pb-4">
+      <v-card-title dark color="white" dense>
+        <div class="title" style="color: black">
+          {{ $vuetify.lang.t("$vuetify.bills.list.title2") }}
+        </div>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-btn icon light @click="forceRefresh() + resetDataForm()">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <!--      <v-form style="margin-top: 15px" readonly>-->
+      <!--        <v-card-text>-->
+      <!--          <v-row wrap>-->
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0">-->
+      <!--              <v-text-field-->
+      <!--                v-model="form.code"-->
+      <!--                color="primary"-->
+      <!--                :label="$vuetify.lang.t('$vuetify.bills.cols.bill_N.title')"-->
+      <!--                prepend-inner-icon="mdi-code-array mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                filled-->
+      <!--                readonly-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            <v-col cols="12" sm="1" class="mb-0 py-0"></v-col>-->
+      <!--            <v-col cols="12" sm="2" class="mb-0 py-0">-->
+      <!--              <v-menu-->
+      <!--                v-model="menu3"-->
+      <!--                color="primary"-->
+      <!--                :close-on-content-click="false"-->
+      <!--                :nudge-right="40"-->
+      <!--                transition="scale-transition"-->
+      <!--                offset-y-->
+      <!--                min-width="auto"-->
+      <!--              >-->
+      <!--                <template v-slot:activator="{ on, attrs }">-->
+      <!--                  <v-text-field-->
+      <!--                    v-model="form.bills_date"-->
+      <!--                    color="primary"-->
+      <!--                    :label="-->
+      <!--                      $vuetify.lang.t('$vuetify.bills.cols.date_bill.title')-->
+      <!--                    "-->
+      <!--                    prepend-inner-icon="mdi-clock-start mdi-dark mdi-18px"-->
+      <!--                    class="font-weight-bold"-->
+      <!--                    outlined-->
+      <!--                    v-bind="attrs"-->
+      <!--                    v-on="on"-->
+      <!--                    dense-->
+      <!--                    light-->
+      <!--                    readonly-->
+      <!--                  ></v-text-field>-->
+      <!--                </template>-->
+      <!--                <v-date-picker-->
+      <!--                  v-model="form.bills_date"-->
+      <!--                  :max="maxDate"-->
+      <!--                  color="primary"-->
+      <!--                  disabled-->
+      <!--                  @input="menu3 = false"-->
+      <!--                ></v-date-picker>-->
+      <!--              </v-menu>-->
+      <!--            </v-col>-->
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0">-->
+      <!--              <v-select-->
+      <!--                v-model="form.bill_type"-->
+      <!--                color="primary"-->
+      <!--                :items="optionBills.type_bills"-->
+      <!--                :label="$vuetify.lang.t('$vuetify.bills.cols.bill_type.title')"-->
+      <!--                :placeholder="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.bill_type.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-gender-male-female mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--              ></v-select>-->
+      <!--            </v-col>-->
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0">-->
+      <!--              <v-text-field-->
+      <!--                v-model="$auth.user().username"-->
+      <!--                color="primary"-->
+      <!--                :label="$vuetify.lang.t('$vuetify.bills.cols.cashier.title')"-->
+      <!--                prepend-inner-icon="mdi-code-array mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                filled-->
+      <!--                readonly-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+
+      <!--            <v-col cols="12" sm="4" class="mb-0 py-0">-->
+      <!--              <v-autocomplete-->
+      <!--                v-model="form.patient"-->
+      <!--                :items="itemsPatient"-->
+      <!--                :loading="isLoadingPatient"-->
+      <!--                :search-input.sync="searchPatient"-->
+      <!--                color="primary"-->
+      <!--                item-text="name"-->
+      <!--                item-value="id"-->
+      <!--                return-object-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.patient_name.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-account mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                autofocus-->
+      <!--                clearable-->
+      <!--              ></v-autocomplete>-->
+      <!--            </v-col>-->
+      <!--            <v-col-->
+      <!--              cols="12"-->
+      <!--              sm="4"-->
+      <!--              class="mb-0 py-0"-->
+      <!--              v-if="this.form.id === null"-->
+      <!--            >-->
+      <!--              <v-text-field-->
+      <!--                color="primary"-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.code_patient.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-code-array mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                v-model="get_patient_code"-->
+      <!--                readonly-->
+      <!--                filled-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            <v-col cols="12" sm="4" class="mb-0 py-0" v-else>-->
+      <!--              <v-text-field-->
+      <!--                color="primary"-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.code_patient.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-code-array mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                v-model="this.form.patient_name"-->
+      <!--                readonly-->
+      <!--                filled-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            <v-col-->
+      <!--              cols="12"-->
+      <!--              sm="1"-->
+      <!--              class="mb-0 py-0"-->
+      <!--              v-if="_.includes(this.$auth.user().permissions, 'add_patient')"-->
+      <!--            >-->
+      <!--              <v-btn-->
+      <!--                class="mr-8"-->
+      <!--                dark-->
+      <!--                dense-->
+      <!--                @click="createPatient()"-->
+      <!--                color="primary"-->
+      <!--              >-->
+      <!--                <v-icon dark>-->
+      <!--                  mdi-plus-->
+      <!--                </v-icon>-->
+      <!--              </v-btn>-->
+      <!--            </v-col>-->
+      <!--            <v-col-->
+      <!--              cols="12"-->
+      <!--              sm="3"-->
+      <!--              class="mb-0 py-0"-->
+      <!--              v-if="this.form.id === null"-->
+      <!--            >-->
+      <!--              <v-text-field-->
+      <!--                color="primary"-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.patient_type.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-shape-circle-plus mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                v-model="get_patient_shape"-->
+      <!--                readonly-->
+      <!--                filled-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0" v-else>-->
+      <!--              <v-text-field-->
+      <!--                color="primary"-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.patient_type.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-shape-circle-plus mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                v-model="form.patient_type"-->
+      <!--                readonly-->
+      <!--                filled-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            &lt;!&ndash;            <v-col cols="12" sm="3" class="mb-0 py-0">&ndash;&gt;-->
+      <!--            &lt;!&ndash;              <v-select&ndash;&gt;-->
+      <!--            &lt;!&ndash;                v-model="form.patient_type"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                color="primary"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                :items="optionPatient_shape.type_Patient_shape"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                :label="&ndash;&gt;-->
+      <!--            &lt;!&ndash;                  $vuetify.lang.t('$vuetify.bills.cols.patient_type.title')&ndash;&gt;-->
+      <!--            &lt;!&ndash;                "&ndash;&gt;-->
+      <!--            &lt;!&ndash;                :placeholder="&ndash;&gt;-->
+      <!--            &lt;!&ndash;                  $vuetify.lang.t('$vuetify.bills.cols.patient_type.title')&ndash;&gt;-->
+      <!--            &lt;!&ndash;                "&ndash;&gt;-->
+      <!--            &lt;!&ndash;                prepend-inner-icon="mdi-gender-male-female"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                class="font-weight-bold mdi-18px"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                outlined&ndash;&gt;-->
+      <!--            &lt;!&ndash;                dense&ndash;&gt;-->
+      <!--            &lt;!&ndash;              ></v-select>&ndash;&gt;-->
+      <!--            &lt;!&ndash;            </v-col>&ndash;&gt;-->
+
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0">-->
+      <!--              <v-text-field-->
+      <!--                color="primary"-->
+      <!--                v-model="get_patient_solde"-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.patient_balance.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-credit-card mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                readonly-->
+      <!--                suffix="FCFA"-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0">-->
+      <!--              <v-autocomplete-->
+      <!--                v-model="form.doctor"-->
+      <!--                :items="itemsDoctor"-->
+      <!--                :loading="isLoadingDoctor"-->
+      <!--                :search-input.sync="searchDoctor"-->
+      <!--                color="primary"-->
+      <!--                item-text="name"-->
+      <!--                item-value="id"-->
+      <!--                return-object-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.dealing_with.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-account mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                clearable-->
+      <!--                :readonly="supply"-->
+      <!--              ></v-autocomplete>-->
+      <!--            </v-col>-->
+
+      <!--            <v-col cols="12" sm="4" class="mb-0 py-0">-->
+      <!--              <v-text-field-->
+      <!--                v-model="form.additional_info"-->
+      <!--                color="primary"-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t(-->
+      <!--                    '$vuetify.supplies.cols.additional_info.title'-->
+      <!--                  )-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-script-text mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                :readonly="supply"-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            <v-col-->
+      <!--              cols="12"-->
+      <!--              sm="2"-->
+      <!--              class="mb-0 py-0"-->
+      <!--              v-if="this.form.bill_type === 'pharmacy'"-->
+      <!--            >-->
+      <!--              <v-select-->
+      <!--                v-model="form.bill_shape"-->
+      <!--                color="primary"-->
+      <!--                :items="optionShape.type_shape"-->
+      <!--                :label="$vuetify.lang.t('$vuetify.bills.cols.bill_shape.title')"-->
+      <!--                :placeholder="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.bill_shape.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-gender-male-female mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--              ></v-select>-->
+      <!--            </v-col>-->
+      <!--            &lt;!&ndash;            <v-col&ndash;&gt;-->
+      <!--            &lt;!&ndash;              cols="12"&ndash;&gt;-->
+      <!--            &lt;!&ndash;              sm="1"&ndash;&gt;-->
+      <!--            &lt;!&ndash;              class="mb-0 py-0"&ndash;&gt;-->
+      <!--            &lt;!&ndash;              v-if="this.form.id === null"&ndash;&gt;-->
+      <!--            &lt;!&ndash;            >&ndash;&gt;-->
+      <!--            &lt;!&ndash;              <v-btn&ndash;&gt;-->
+      <!--            &lt;!&ndash;                color="primary"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                :loading="loadingBtn"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                dark&ndash;&gt;-->
+      <!--            &lt;!&ndash;                type="submit"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                dense&ndash;&gt;-->
+      <!--            &lt;!&ndash;                max-width="2px"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                style="margin-top: 2px"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                depressed&ndash;&gt;-->
+      <!--            &lt;!&ndash;                :disabled="&ndash;&gt;-->
+      <!--            &lt;!&ndash;                  this.form.patient === null ||&ndash;&gt;-->
+      <!--            &lt;!&ndash;                    this.form.doctor === null ||&ndash;&gt;-->
+      <!--            &lt;!&ndash;                    this.form.patient_type === null ||&ndash;&gt;-->
+      <!--            &lt;!&ndash;                    this.form.additional_info === null ||&ndash;&gt;-->
+      <!--            &lt;!&ndash;                    supply&ndash;&gt;-->
+      <!--            &lt;!&ndash;                "&ndash;&gt;-->
+      <!--            &lt;!&ndash;              >&ndash;&gt;-->
+      <!--            &lt;!&ndash;                <v-icon dark>&ndash;&gt;-->
+      <!--            &lt;!&ndash;                  mdi-content-save&ndash;&gt;-->
+      <!--            &lt;!&ndash;                </v-icon>&ndash;&gt;-->
+      <!--            &lt;!&ndash;                &lt;!&ndash;{{ $vuetify.lang.t(messages.submit) }}&ndash;&gt;&ndash;&gt;-->
+      <!--            &lt;!&ndash;              </v-btn>&ndash;&gt;-->
+      <!--            &lt;!&ndash;            </v-col>&ndash;&gt;-->
+      <!--          </v-row>-->
+      <!--        </v-card-text>-->
+      <!--        &lt;!&ndash;<v-card-actions style="margin-top: -45px">&ndash;&gt;-->
+      <!--        &lt;!&ndash;<v-spacer></v-spacer>&ndash;&gt;-->
+      <!--        &lt;!&ndash;<v-btn color="primary" :loading="loading" dark type="submit" small style="margin-left: 18px">&ndash;&gt;-->
+      <!--        &lt;!&ndash;{{ $vuetify.lang.t(messages.submit) }}&ndash;&gt;-->
+      <!--        &lt;!&ndash;</v-btn>&ndash;&gt;-->
+      <!--        &lt;!&ndash;</v-card-actions>&ndash;&gt;-->
+      <!--        <v-divider class="mx-4" style="margin-top: -15px"></v-divider>-->
+      <!--      </v-form>-->
+
+      <!--      <v-form-->
+      <!--        @submit.prevent="saveDetails"-->
+      <!--        :disabled="-->
+      <!--          (form.bills_date === null ||-->
+      <!--            form.patient === null ||-->
+      <!--            form.doctor === null ||-->
+      <!--            form.additional_info === null ||-->
+      <!--            form.bill_shape === null) &&-->
+      <!--            (form.bills_date === null ||-->
+      <!--              form.patient === null ||-->
+      <!--              form.doctor === null ||-->
+      <!--              form.additional_info === null)-->
+      <!--        "-->
+      <!--        readonly-->
+      <!--      >-->
+      <!--        <v-card-text>-->
+      <!--          <div class="d-flex wrap align-center">-->
+      <!--            <v-autocomplete-->
+      <!--              v-model="formData.details_stock"-->
+      <!--              :items="itemsProduct"-->
+      <!--              :loading="isLoading"-->
+      <!--              :search-input.sync="search"-->
+      <!--              color="primary"-->
+      <!--              item-text="product_name"-->
+      <!--              item-value="id"-->
+      <!--              return-object-->
+      <!--              :label="-->
+      <!--                $vuetify.lang.t('$vuetify.supplies.cols.product_name.title')-->
+      <!--              "-->
+      <!--              class="font-weight-bold"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              clearable-->
+      <!--              style="max-width: 250px"-->
+      <!--              v-if="this.form.bill_type === 'pharmacy'"-->
+      <!--            ></v-autocomplete>-->
+      <!--            <v-autocomplete-->
+      <!--              v-model="formData.medical_act"-->
+      <!--              :items="itemsMedical_act"-->
+      <!--              :loading="isLoadingMedical_act"-->
+      <!--              :search-input.sync="searchMedical_act"-->
+      <!--              color="primary"-->
+      <!--              item-text="name"-->
+      <!--              item-value="id"-->
+      <!--              return-object-->
+      <!--              style="max-width: 300px"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.medical_act.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              clearable-->
+      <!--              v-if="this.form.bill_type === 'medical_act'"-->
+      <!--            ></v-autocomplete>-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="-->
+      <!--                $vuetify.lang.t('$vuetify.supplies.cols.product_code.title')-->
+      <!--              "-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              style="max-width: 180px"-->
+      <!--              :value="get_product_code"-->
+      <!--              readonly-->
+      <!--              filled-->
+      <!--              v-if="this.form.bill_type === 'pharmacy'"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="-->
+      <!--                $vuetify.lang.t('$vuetify.bills.cols.medical_act.titleCode')-->
+      <!--              "-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              v-if="this.form.bill_type === 'medical_act'"-->
+      <!--              style="max-width: 220px"-->
+      <!--              :value="get_act_code"-->
+      <!--              readonly-->
+      <!--              filled-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              v-model="formData.quantity_ordered"-->
+      <!--              color="primary"-->
+      <!--              :label="-->
+      <!--                $vuetify.lang.t('$vuetify.bills.cols.quantity_ordered.title')-->
+      <!--              "-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              style="max-width: 100px"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              type="number"-->
+      <!--              min="0"-->
+      <!--              :rules="[numberRuleQteOrdered]"-->
+      <!--              v-if="this.form.bill_shape === 'ORDINANCE'"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              v-model="formData.quantity_served"-->
+      <!--              color="primary"-->
+      <!--              :label="-->
+      <!--                $vuetify.lang.t('$vuetify.bills.cols.quantity_served.title')-->
+      <!--              "-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              type="number"-->
+      <!--              :rules="[numberRuleQteServed]"-->
+      <!--              min="0"-->
+      <!--              style="max-width: 80px"-->
+      <!--            ></v-text-field>-->
+
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              filled-->
+      <!--              readonly-->
+      <!--              style="max-width: 90px"-->
+      <!--              v-if="this.form.bill_shape === 'ORDINANCE'"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.pub.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              :value="get_product_public_price"-->
+      <!--              readonly-->
+      <!--              v-if="form.bill_type === 'pharmacy'"-->
+      <!--              filled-->
+      <!--              style="max-width: 100px"-->
+      <!--            ></v-text-field-->
+      <!--            ><v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.pub.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              :value="get_product_public_price_act"-->
+      <!--              readonly-->
+      <!--              v-if="form.bill_type === 'medical_act'"-->
+      <!--              filled-->
+      <!--              style="max-width: 130px"-->
+      <!--            ></v-text-field>-->
+      <!--            &lt;!&ndash;            <v-text-field&ndash;&gt;-->
+      <!--            &lt;!&ndash;              color="primary"&ndash;&gt;-->
+      <!--            &lt;!&ndash;              :label="$vuetify.lang.t('$vuetify.bills.cols.price.title')"&ndash;&gt;-->
+      <!--            &lt;!&ndash;              class="font-weight-bold ml-1"&ndash;&gt;-->
+      <!--            &lt;!&ndash;              outlined&ndash;&gt;-->
+      <!--            &lt;!&ndash;              dense&ndash;&gt;-->
+      <!--            &lt;!&ndash;              :value="get_act_price"&ndash;&gt;-->
+      <!--            &lt;!&ndash;              readonly&ndash;&gt;-->
+      <!--            &lt;!&ndash;              filled&ndash;&gt;-->
+      <!--            &lt;!&ndash;              style="max-width: 210px"&ndash;&gt;-->
+      <!--            &lt;!&ndash;              v-if="this.form.bill_type === 'MEDICAL_ACT'"&ndash;&gt;-->
+      <!--            &lt;!&ndash;            ></v-text-field>&ndash;&gt;-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.delivery.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              type="number"-->
+      <!--              min="0"-->
+      <!--              :rules="[numberRuleDelivery]"-->
+      <!--              dense-->
+      <!--              v-model="formData.delivery"-->
+      <!--              style="max-width: 80px"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.pun.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              readonly-->
+      <!--              filled-->
+      <!--              v-if="form.bill_type === 'pharmacy'"-->
+      <!--              :value="get_pu_net"-->
+      <!--              style="max-width: 155px"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.amount_gross.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              :value="get_amount_gross"-->
+      <!--              dense-->
+      <!--              readonly-->
+      <!--              filled-->
+      <!--              v-if="form.bill_type === 'pharmacy'"-->
+      <!--              style="max-width: 200px"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.amount_net.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              :value="get_amount_net"-->
+      <!--              dense-->
+      <!--              readonly-->
+      <!--              filled-->
+      <!--              v-if="form.bill_type === 'pharmacy'"-->
+      <!--              style="max-width: 200px"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.pun.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              dense-->
+      <!--              readonly-->
+      <!--              v-if="form.bill_type === 'medical_act'"-->
+      <!--              filled-->
+      <!--              :value="get_pu_net_act"-->
+      <!--              style="max-width: 155px"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.amount_gross.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              :value="get_amount_gross_act"-->
+      <!--              dense-->
+      <!--              readonly-->
+      <!--              v-if="form.bill_type === 'medical_act'"-->
+      <!--              filled-->
+      <!--              style="max-width: 200px"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-text-field-->
+      <!--              color="primary"-->
+      <!--              :label="$vuetify.lang.t('$vuetify.bills.cols.amount_net.title')"-->
+      <!--              class="font-weight-bold ml-1"-->
+      <!--              outlined-->
+      <!--              :value="get_amount_net_act"-->
+      <!--              v-if="form.bill_type === 'medical_act'"-->
+      <!--              dense-->
+      <!--              readonly-->
+      <!--              filled-->
+      <!--              style="max-width: 200px"-->
+      <!--            ></v-text-field>-->
+      <!--            <v-tooltip top v-if="form.bill_type === 'pharmacy'">-->
+      <!--              <template v-slot:activator="{ on }">-->
+      <!--                <template>-->
+      <!--                  <v-btn-->
+      <!--                    icon-->
+      <!--                    color="primary"-->
+      <!--                    :loading="loadingBtn"-->
+      <!--                    type="submit"-->
+      <!--                    v-on="on"-->
+      <!--                    style="margin-top: -25px"-->
+      <!--                    class="font-weight-bold ml-5"-->
+      <!--                    :disabled="-->
+      <!--                      formData.details_stock === null ||-->
+      <!--                        formData.quantity_served === null-->
+      <!--                    "-->
+      <!--                  >-->
+      <!--                    <v-icon dark size="30">-->
+      <!--                      mdi-content-save-->
+      <!--                    </v-icon>-->
+      <!--                  </v-btn>-->
+      <!--                </template>-->
+      <!--              </template>-->
+      <!--              <span-->
+      <!--                class="-->
+      <!--                        text-center-->
+      <!--                        font-weight-bold-->
+      <!--                        body-2-->
+      <!--                        withe&#45;&#45;text-->
+      <!--                        text&#45;&#45;d-->
+      <!--                        ken-1-->
+      <!--                      "-->
+      <!--              >-->
+      <!--                {{ $vuetify.lang.t("$vuetify.bills.new.add_product") }}-->
+      <!--              </span>-->
+      <!--            </v-tooltip>-->
+      <!--            <v-tooltip top v-else>-->
+      <!--              <template v-slot:activator="{ on }">-->
+      <!--                <template>-->
+      <!--                  <v-btn-->
+      <!--                    icon-->
+      <!--                    color="primary"-->
+      <!--                    :loading="loadingBtn"-->
+      <!--                    type="submit"-->
+      <!--                    v-on="on"-->
+      <!--                    style="margin-top: -25px"-->
+      <!--                    class="font-weight-bold ml-5"-->
+      <!--                    :disabled="-->
+      <!--                      formData.quantity_served === null ||-->
+      <!--                        formData.medical_act === null-->
+      <!--                    "-->
+      <!--                  >-->
+      <!--                    <v-icon dark size="30">-->
+      <!--                      mdi-content-save-->
+      <!--                    </v-icon>-->
+      <!--                  </v-btn>-->
+      <!--                </template>-->
+      <!--              </template>-->
+      <!--              <span-->
+      <!--                class="-->
+      <!--                        text-center-->
+      <!--                        font-weight-bold-->
+      <!--                        body-2-->
+      <!--                        withe&#45;&#45;text-->
+      <!--                        text&#45;&#45;d-->
+      <!--                        ken-1-->
+      <!--                      "-->
+      <!--              >-->
+      <!--                {{ $vuetify.lang.t("$vuetify.bills.new.add_act") }}-->
+      <!--              </span>-->
+      <!--            </v-tooltip>-->
+      <!--          </div>-->
+      <!--        </v-card-text>-->
+      <!--        <v-divider class="mx-4" style="margin-top: -25px"></v-divider>-->
+      <!--      </v-form>-->
+      <!--      <v-form-->
+      <!--        style="margin-top: 15px"-->
+      <!--        :disabled="-->
+      <!--          form.bills_date === null ||-->
+      <!--            form.patient === null ||-->
+      <!--            form.doctor === null ||-->
+      <!--            form.additional_info === null ||-->
+      <!--            form.bill_type === null ||-->
+      <!--            this.get_bills_amount === 0-->
+      <!--        "-->
+      <!--        readonly-->
+      <!--      >-->
+      <!--        <v-card-text style="background-color: #EEEEEE">-->
+      <!--          <v-row wrap>-->
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0" style="margin-top: 15px">-->
+      <!--              <v-text-field-->
+      <!--                color="primary"-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.net_payable.title')-->
+      <!--                "-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                :value="get_bills_amount"-->
+      <!--                readonly-->
+      <!--                filled-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0" style="margin-top: 15px">-->
+      <!--              <v-text-field-->
+      <!--                v-model="form.advances"-->
+      <!--                color="primary"-->
+      <!--                :label="$vuetify.lang.t('$vuetify.bills.cols.advance.title')"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                type="number"-->
+      <!--                min="0"-->
+      <!--                :rules="[numberRuleAdvances]"-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0" style="margin-top: 15px">-->
+      <!--              <v-text-field-->
+      <!--                v-model="get_balance"-->
+      <!--                :value="get_balance"-->
+      <!--                color="primary"-->
+      <!--                :label="$vuetify.lang.t('$vuetify.bills.cols.balance.title')"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                readonly-->
+      <!--                min="0"-->
+      <!--                filled-->
+      <!--              ></v-text-field>-->
+      <!--            </v-col>-->
+      <!--            <v-col cols="12" sm="3" class="mb-0 py-0" style="margin-top: 15px">-->
+      <!--              <v-select-->
+      <!--                v-model="form.payment_method"-->
+      <!--                color="primary"-->
+      <!--                :items="optionPayment.type_Payment"-->
+      <!--                :label="-->
+      <!--                  $vuetify.lang.t('$vuetify.bills.cols.payment_method.title')-->
+      <!--                "-->
+      <!--                prepend-inner-icon="mdi-account-cash mdi-dark mdi-18px"-->
+      <!--                class="font-weight-bold"-->
+      <!--                outlined-->
+      <!--                dense-->
+      <!--                :readonly="form.advances === 0"-->
+      <!--              ></v-select>-->
+      <!--            </v-col>-->
+      <!--          </v-row>-->
+      <!--        </v-card-text>-->
+      <!--        &lt;!&ndash;        <v-card-actions>&ndash;&gt;-->
+      <!--        &lt;!&ndash;          <v-spacer></v-spacer>&ndash;&gt;-->
+      <!--        &lt;!&ndash;          <v-btn&ndash;&gt;-->
+      <!--        &lt;!&ndash;              dark&ndash;&gt;-->
+      <!--        &lt;!&ndash;              color="primary"&ndash;&gt;-->
+      <!--        &lt;!&ndash;              @click="resetFormBills()"&ndash;&gt;-->
+      <!--        &lt;!&ndash;              :loading="loadingBtn"&ndash;&gt;-->
+      <!--        &lt;!&ndash;          >&ndash;&gt;-->
+      <!--        &lt;!&ndash;            {{ $vuetify.lang.t("$vuetify.btn.reset") }}&ndash;&gt;-->
+      <!--        &lt;!&ndash;          </v-btn>&ndash;&gt;-->
+      <!--        &lt;!&ndash;          <v-btn&ndash;&gt;-->
+      <!--        &lt;!&ndash;              dark&ndash;&gt;-->
+      <!--        &lt;!&ndash;              color="primary"&ndash;&gt;-->
+      <!--        &lt;!&ndash;              @click="save()"&ndash;&gt;-->
+      <!--        &lt;!&ndash;              :loading="loadingBtn"&ndash;&gt;-->
+      <!--        &lt;!&ndash;              :disabled="&ndash;&gt;-->
+      <!--        &lt;!&ndash;              this.get_bills_amount === 0 || this.form.payment_method === null&ndash;&gt;-->
+      <!--        &lt;!&ndash;            "&ndash;&gt;-->
+      <!--        &lt;!&ndash;          >&ndash;&gt;-->
+      <!--        &lt;!&ndash;            {{ $vuetify.lang.t("$vuetify.bills.new.save_bills") }}&ndash;&gt;-->
+      <!--        &lt;!&ndash;          </v-btn>&ndash;&gt;-->
+      <!--        &lt;!&ndash;          <v-btn&ndash;&gt;-->
+      <!--        &lt;!&ndash;              color="primary"&ndash;&gt;-->
+      <!--        &lt;!&ndash;              :loading="loadingBtn"&ndash;&gt;-->
+      <!--        &lt;!&ndash;              dark&ndash;&gt;-->
+      <!--        &lt;!&ndash;              @click="save_print_bills()"&ndash;&gt;-->
+      <!--        &lt;!&ndash;              :disabled="&ndash;&gt;-->
+      <!--        &lt;!&ndash;              this.get_bills_amount === 0 || this.form.payment_method === null&ndash;&gt;-->
+      <!--        &lt;!&ndash;            "&ndash;&gt;-->
+      <!--        &lt;!&ndash;          >&ndash;&gt;-->
+      <!--        &lt;!&ndash;            {{ $vuetify.lang.t("$vuetify.bills.new.save_print_bills") }}&ndash;&gt;-->
+      <!--        &lt;!&ndash;          </v-btn>&ndash;&gt;-->
+      <!--        &lt;!&ndash;          &lt;!&ndash;          <v-btn&ndash;&gt;&ndash;&gt;-->
+      <!--        &lt;!&ndash;          &lt;!&ndash;            color="primary"&ndash;&gt;&ndash;&gt;-->
+      <!--        &lt;!&ndash;          &lt;!&ndash;            :loading="loadingBtn"&ndash;&gt;&ndash;&gt;-->
+      <!--        &lt;!&ndash;          &lt;!&ndash;            dark&ndash;&gt;&ndash;&gt;-->
+      <!--        &lt;!&ndash;          &lt;!&ndash;            @click="print_bills()"&ndash;&gt;&ndash;&gt;-->
+      <!--        &lt;!&ndash;          &lt;!&ndash;            :disabled="this.get_bills_amount === 0"&ndash;&gt;&ndash;&gt;-->
+      <!--        &lt;!&ndash;          &lt;!&ndash;          >&ndash;&gt;&ndash;&gt;-->
+      <!--        &lt;!&ndash;          &lt;!&ndash;            {{ $vuetify.lang.t("$vuetify.bills.new.print_bills") }}&ndash;&gt;&ndash;&gt;-->
+      <!--        &lt;!&ndash;          &lt;!&ndash;          </v-btn>&ndash;&gt;&ndash;&gt;-->
+      <!--        &lt;!&ndash;        </v-card-actions>&ndash;&gt;-->
+      <!--        <v-divider class="mx-4"></v-divider>-->
+      <!--      </v-form>-->
+      <v-card-text readonly>
+        <v-data-table
+          :footer-props="{
+            'items-per-page-options': itemPerPageOptions,
+          }"
+          :headers="headers"
+          :items="items"
+          :items-per-page="itemPerPage"
+          :loading="loadingDetails.list"
+          :options.sync="pagination"
+          :server-items-length="meta.totalElements"
+          :sort-by="sortBy"
+          :sort-desc="sortDesc"
+          item-key="name"
+          class="mt-5"
+        >
+          <template v-slot:header.bill_type="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.product_name="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.product_code="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.quantity_served="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.pub="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.pun="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.delivery="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.amount_gross="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <template v-slot:header.amount_net="{ header }">
+            <tr>
+              {{
+                $vuetify.lang.t(header.text)
+              }}
+            </tr>
+          </template>
+          <!--          <template v-slot:header.null="{ header }">-->
+          <!--            <tr>-->
+          <!--              {{-->
+          <!--                $vuetify.lang.t(header.text)-->
+          <!--              }}-->
+          <!--            </tr>-->
+          <!--          </template>-->
+          <template v-slot:body="{ items }">
+            <v-hover>
+              <tbody>
+                <tr :key="item.id" v-for="item in items">
+                  <td class="subtitle-2">
+                    {{
+                      $vuetify.lang.t(
+                        "$vuetify.bills.cols.bill_type." + item.bills.bill_type
+                      )
+                    }}
+                  </td>
+                  <td class="subtitle-2">
+                    {{
+                      item.details_stock
+                        ? item.details_stock.product.name
+                        : item.medical_act
+                        ? item.medical_act.name
+                        : "-"
+                    }}
+                  </td>
+                  <td class="subtitle-2">
+                    {{
+                      item.details_stock
+                        ? item.details_stock.product.code
+                        : item.medical_act
+                        ? item.medical_act.code
+                        : "-"
+                    }}
+                  </td>
+                  <td class="subtitle-2">
+                    {{ item.quantity_served }}
+                  </td>
+                  <td class="subtitle-2">
+                    {{ item.pub }}
+                  </td>
+                  <td class="subtitle-2">
+                    {{ item.delivery }}
+                  </td>
+                  <td class="subtitle-2">
+                    {{ item.pun }}
+                  </td>
+                  <td class="subtitle-2">
+                    {{ item.amount_gross }}
+                  </td>
+                  <td class="subtitle-2">
+                    {{ item.amount_net }}
+                  </td>
+                  <!--                <td class="subtitle-2" width="50px">-->
+                  <!--                  <template>-->
+                  <!--                    <v-tooltip bottom>-->
+                  <!--                      <template v-slot:activator="{ on }">-->
+                  <!--                        <v-btn-->
+                  <!--                            @click="editDetails(item)"-->
+                  <!--                            color="secondary"-->
+                  <!--                            icon-->
+                  <!--                            text-->
+                  <!--                            v-on="on"-->
+                  <!--                            v-show="$vuetify.breakpoint.smAndDown || hover"-->
+                  <!--                        >-->
+                  <!--                          <v-icon mdi-18px>mdi-grease-pencil</v-icon>-->
+                  <!--                        </v-btn>-->
+                  <!--                      </template>-->
+                  <!--                      <span>{{ $vuetify.lang.t("$vuetify.btn.edit") }}</span>-->
+                  <!--                    </v-tooltip>-->
+                  <!--                    <v-tooltip bottom>-->
+                  <!--                      <template v-slot:activator="{ on }">-->
+                  <!--                        <v-btn-->
+                  <!--                            @click="deleteItem(item)"-->
+                  <!--                            color="red"-->
+                  <!--                            icon-->
+                  <!--                            text-->
+                  <!--                            v-on="on"-->
+                  <!--                            dark-->
+                  <!--                            v-show="$vuetify.breakpoint.smAndDown || hover"-->
+                  <!--                        >-->
+                  <!--                          <v-icon mdi-18px>mdi-delete-outline</v-icon>-->
+                  <!--                        </v-btn>-->
+                  <!--                      </template>-->
+                  <!--                      <span>{{-->
+                  <!--                          $vuetify.lang.t("$vuetify.btn.remove")-->
+                  <!--                        }}</span>-->
+                  <!--                    </v-tooltip>-->
+                  <!--                  </template>-->
+                  <!--                </td>-->
+                </tr>
+              </tbody>
+            </v-hover>
+          </template>
+        </v-data-table>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+  <!--    <pdf :src="pdfsrc"></pdf>-->
+</template>
+
+<script>
+// import axios from "axios";
+// import ListMixin from "./../../mixins/Common/List.vue";
+import FormMixin from "./../../mixins/Common/Form.vue";
+// import {mapGetters} from "vuex";
+// import { required } from "vuelidate/lib/validators";
+// const FileSaver = require("file-saver");
+// import pdf from 'vue-pdf'
+export default {
+  mixins: [FormMixin],
+  props: {
+    form: {
+      type: Object,
+      default: function () {
+        return {
+          id: null,
+          patient: null,
+          doctor: null,
+          medical_act: null,
+          patient_name: null,
+          patient_balance: null,
+          net_payable: null,
+          patient_type: null,
+          bills_date: new Date(
+            Date.now() - new Date().getTimezoneOffset() * 60000
+          )
+            .toISOString()
+            .substr(0, 10),
+          pub: null,
+          pun: null,
+          amount_gross: null,
+          payment_method: "CASH",
+          quantity_ordered: null,
+          amount_net: null,
+          total_amount: null,
+          quantity_served: null,
+          details_stock: null,
+          delivery: null,
+          balance: null,
+          bills: null,
+          reference_no: null,
+          additional_info: "R.A.S",
+          bills_amount: null,
+          code: null,
+          cashier: null,
+          bill_type: "pharmacy",
+          advances: 0,
+          bill_shape: "CLASSIC",
+        };
+      },
+    },
+  },
+  data: () => ({
+    pdfsrc: null,
+    headers: [],
+    headers_act: [],
+    items: [],
+    items_act: [],
+    meta: {},
+    sum: "",
+    next_beneficiary: "",
+    current_contribution: "",
+    itemPerPage: 10,
+    //itemPerPages: 3,
+    itemPerPageOptions: [5, 10, 30],
+    urlDeleteItems: "",
+    sortDesc: true,
+    loading: {
+      list: false,
+      refresh: false,
+      filter: false,
+    },
+    pagination: {},
+    selectedItem: false,
+    _search: {},
+    _sorts: {},
+    dialogDelete: {
+      show: false,
+    },
+    sortBy: ["id"],
+    e1: 1,
+
+    dialogForm: {
+      show: false,
+      shows: {
+        showFilter: false,
+        showInfo: false,
+      },
+    },
+
+    dialogFormDetails: {
+      show: false,
+      shows: {
+        showFilter: false,
+        showInfo: false,
+      },
+    },
+    messagesDelete: {
+      success: "$vuetify.supplies.delete.success",
+    },
+    loadingBtn: false,
+    // formR: {
+    //   id: null,
+    //   name: null
+    // },
+    loadingDetails: {
+      list: false,
+      refresh: false,
+      filter: false,
+    },
+    urlItemsDetails_bills: "details_bills",
+  }),
+  watch: {
+    pagination: {
+      handler() {
+        this.getItemsDetails();
+      },
+      deep: true,
+    },
+  },
+  created() {
+    this.setHeaders();
+    this.setHeadersAct();
+
+    //this.setItemRoles();
+  },
+  validations() {
+    let validators = {
+      form: {},
+    };
+    return validators;
+  },
+  methods: {
+    forceRefresh() {
+      this.dialog.show = false;
+      this.items = [];
+      this.active = false;
+    },
+    setHeaders() {
+      this.headers = [
+        {
+          text: "$vuetify.bills.cols.bill_type.title",
+          value: "bill_type",
+          align: "start",
+          sortable: true,
+          width: "20",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.product_name.title",
+          value: "product_name",
+          align: "start",
+          sortable: true,
+          width: "120",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.product_code.title",
+          value: "product_code",
+          align: "start",
+          sortable: true,
+          width: "20",
+          class: "grey--text text--darken-3",
+        },
+
+        {
+          text: "$vuetify.bills.cols.quantity_served.title",
+          value: "quantity_served",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.pub.title",
+          value: "pub",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.delivery.title",
+          value: "delivery",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.pun.title",
+          value: "pun",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.amount_gross.title",
+          value: "amount_gross",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.amount_net.title",
+          value: "amount_net",
+          align: "start",
+          sortable: true,
+          width: "60",
+          class: "grey--text text--darken-3",
+        },
+
+        // {
+        //   text: "$vuetify.supplies.cols.created.title",
+        //   value: "create_date",
+        //   align: "start",
+        //   sortable: true,
+        //   width: "105",
+        //   class: "grey--text text--darken-3"
+        // },
+        // {
+        //   text: "$vuetify.supplies.cols.actions.title",
+        //   value: null,
+        //   align: "start",
+        //   sortable: true,
+        //   width: "80"
+        // }
+      ];
+    },
+    setHeadersAct() {
+      this.headers_act = [
+        {
+          text: "$vuetify.medical_act.cols.name.title",
+          value: "name",
+          align: "start",
+          sortable: true,
+          width: "120",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.product_code.title",
+          value: "product_code",
+          align: "start",
+          sortable: true,
+          width: "20",
+          class: "grey--text text--darken-3",
+        },
+
+        {
+          text: "$vuetify.bills.cols.quantity_served.title",
+          value: "quantity_served",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.pub.title",
+          value: "pub",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.delivery.title",
+          value: "delivery",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.pun.title",
+          value: "pun",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.amount_gross.title",
+          value: "amount_gross",
+          align: "start",
+          sortable: true,
+          width: "100",
+          class: "grey--text text--darken-3",
+        },
+        {
+          text: "$vuetify.bills.cols.amount_net.title",
+          value: "amount_net",
+          align: "start",
+          sortable: true,
+          width: "60",
+          class: "grey--text text--darken-3",
+        },
+
+        // {
+        //   text: "$vuetify.supplies.cols.created.title",
+        //   value: "create_date",
+        //   align: "start",
+        //   sortable: true,
+        //   width: "105",
+        //   class: "grey--text text--darken-3"
+        // },
+        // {
+        //   text: "$vuetify.supplies.cols.actions.title",
+        //   value: null,
+        //   align: "start",
+        //   sortable: true,
+        //   width: "80"
+        // }
+      ];
+    },
+    // Fonction pour récuperer le contenu des champs du formulaire
+    getDataFormdetails() {
+      let data = {
+        quantity_served: this.formData.quantity_served,
+        bill_type: this.form.bill_type,
+        details_stock:
+          this.formData.details_stock === undefined ||
+          this.formData.details_stock === null
+            ? ""
+            : this.formData.details_stock["id"],
+        quantity_ordered:
+          this.formData.quantity_ordered === null
+            ? 0
+            : this.formData.quantity_ordered,
+        pub:
+          this.form.bill_type === "pharmacy"
+            ? this.get_product_public_price
+            : this.get_product_public_price_act,
+        pun:
+          this.form.bill_type === "pharmacy"
+            ? this.get_pu_net
+            : this.get_pu_net_act,
+        delivery:
+          this.formData.delivery === null || this.formData.delivery === ""
+            ? 0
+            : this.formData.delivery,
+        amount_gross:
+          this.form.bill_type === "pharmacy"
+            ? this.get_amount_gross
+            : this.get_amount_gross_act,
+        amount_net:
+          this.form.bill_type === "pharmacy"
+            ? this.get_amount_net
+            : this.get_amount_net_act,
+        createdAt: this.form.bills_date,
+        product: this.form.patient["id"],
+        medical_act:
+          this.formData.medical_act === undefined ||
+          this.formData.medical_act === null
+            ? ""
+            : this.formData.medical_act["id"],
+        // pub:this.get_product_public_price,0
+        // pub_act:this.get_product_public_price_act,
+        // pun:this.get_pu_net,
+        // pun_act:this.get_pu_net_act,
+        // delivery:
+        //     this.formData.delivery === null || this.formData.delivery === ""
+        //         ? 0
+        //         : this.formData.delivery,
+        // amount_gross:this.get_amount_gross,
+        // amount_gross_act:this.get_amount_gross_act,
+        // amount_net:this.get_amount_net,
+        // amount_net_act:this.get_amount_net_act,
+      };
+
+      return data;
+    },
+    setForm(item) {
+      // Données envoyées lors de la modification
+      this.form.id = item.id;
+      this.form.bills = item.id;
+      this.form.code = item.code;
+      this.form.patient = item.patient["id"];
+      this.itemsPatient.push(item.patient);
+      this.form.doctor = item.doctor["id"];
+      this.itemsDoctor.push(item.doctor);
+      this.form.patient_name = item.patient["name"];
+      this.form.patient_type = item.patient["shape"];
+      this.form.is_accounted = item.is_accounted;
+      this.form.details_stock = item.details_stock;
+      this.form.advances = item.advances;
+      this.form.bills_date = item.createdAt;
+      this.form.payment_method = item.payment_method;
+      this.form.bill_type = item.bill_type;
+      this.form.bill_shape = item.bill_shape;
+      this.form.additional_info = item.additional_info;
+      this.getItemsDetails();
+      // console.log("cul", this.form.supplies);
+    },
+    getRouteDetails() {
+      if (this.form.id) {
+        return this.urlItemsDetails_bills + "/" + this.form.id;
+      } else {
+        return this.urlItemsDetails_bills;
+      }
+    },
+    getRoute() {
+      if (this.form.id) {
+        return this.urlItems + "/" + this.form.id;
+      } else {
+        return this.urlItems;
+      }
+    },
+    refreshItemsDetail() {
+      let self = this;
+      this.loadingDetails.refresh = true;
+      this.getItemsDetails()
+        .then(() => {})
+        .catch(() => {})
+        .then(() => {
+          self.loadingDetails.refresh = false;
+        });
+    },
+    getItemsDetails() {
+      let self = this;
+      const { page, itemsPerPage } = this.pagination;
+      // console.log(page);
+      // console.log(itemsPerPage);
+      let params = {
+        page: page,
+        size: itemsPerPage,
+      };
+      if (!this._.isEmpty(this._search)) {
+        this._search = this._.merge(params, this._search);
+      }
+      return new Promise((resolve, reject) => {
+        this.loadingDetails.list = true;
+        //console.log("ls params", params);
+        //console.log("Sorts", sortBy, sortDesc);
+        self.$store
+          .dispatch("request", {
+            url: self.urlItemsDetails_bills + "?bills=" + this.form.bills,
+            params: params,
+          })
+          .then((response) => {
+            let data = response.data;
+            if (data.content[0]?.details_stock === null) {
+              self.items_act = data.content;
+            } else {
+              self.items = data.content;
+            }
+
+            self.meta = { totalElements: data.totalElements };
+            // console.log("meta", data);
+            resolve(response);
+          })
+          .catch((err) => {
+            let message = this.$vuetify.lang.t("$vuetify.error_occured");
+            if (err.response) {
+              if (err.response.status === 400) {
+                const fields = err.response.data;
+                self.setFormErrors(fields);
+
+                const firstField = Object.keys(fields)[0];
+
+                if (firstField && Array.isArray(fields[firstField])) {
+                  message = fields[firstField][0];
+                }
+              } else if (err.response.status === 403) {
+                message = self.$vuetify.lang.t("$vuetify.error_denied");
+              } else if (err.response.status === 500) {
+                message = self.$vuetify.lang.t("$vuetify.error_server");
+              }
+            }
+            self.$store.dispatch("showNotification", {
+              status: true,
+              text: message,
+            });
+            reject(err);
+          })
+          .then(() => {
+            self.loadingDetails.list = false;
+            resolve();
+          });
+      });
+    },
+  },
+  computed: {},
+  mounted() {},
+  components: {},
+};
+</script>
